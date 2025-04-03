@@ -1,0 +1,663 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[landscape,margin=1cm]{geometry}
+\usepackage[english]{babel}
+\usepackage[latte]{catppuccinpalette}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[svgnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{minted}
+\usepackage{xparse}
+\usemintedstyle[zig]{paraiso-light}
+\usepackage{hyperref}
+\usepackage{fancyhdr}% http://ctan.org/pkg/fancyhdr
+% colour themes to come. KnitR?
+
+%-------------------------
+
+\input{cheatsheet-template.tex}
+\BeforeBeginEnvironment{minted}{\vspace{-2mm}}
+\pagenumbering{arabic}
+
+
+\fancyhf{}% Clear header/footer
+\fancyfoot[R]{\thepage}% \fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}%
+\renewcommand{\footrulewidth}{0.4pt}% Default \footrulewidth is 0pt
+\pagestyle{fancy}
+
+%--------------------------------------------------------------------------------
+\begin{document}
+	\small
+		\begin{multicols*}{3}
+
+		\LARGE\centering\textcolor{CtpPeach}{\textbf{Zig 0.13}}
+		\vspace{2cm}
+		\normalsize
+		\begin{mycolorbox}{CtpPeach}{Entry Point}
+			\begin{minted}[autogobble, breaklines]{zig}
+			pub fn main() void {
+				std.debug.print("Hello world!\n", .{});
+			}
+			\end{minted}
+		\end{mycolorbox}
+\begin{mycolorbox}{CtpSky}{Basic}
+	\textbf{Variable}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var n: u8 = 50;
+	\end{minted}
+
+	\textbf{Constant}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const pi: u32 = 314159;
+	\end{minted}
+
+	\textbf{Array}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+	var array = [_]u8{ 1, 0b0000010, 0x03, 0o04 };
+	\end{minted}
+
+	\textbf{Array addition}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var array_result = array_a ++ array_b;
+	\end{minted}
+
+	\textbf{Array repetition}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+	var array_result = array_a ** 3;
+	\end{minted}
+
+	\textbf{Pointer}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const pointer: *u8 = &n;
+	\end{minted}
+
+	\textbf{	Pointer dereferencing}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+	var n: u8 = pointer.*;
+	\end{minted}
+
+	\textbf{Pointer access}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var n: u8 = struct_pointer.a;
+%	\end{minted}
+	\textbf{Slice}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var slice = array[0..3]; // 1, 2, 3
+	\end{minted}
+	\textbf{Sentinel} 
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const ptr: [*:0]u32 = &nums;
+	\end{minted}
+	\textbf{Tuple (anonymous struct)}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const tuple = .{true, false, @as(i32, 42), @as(f32, 3.141592), };
+	\end{minted}
+	\textbf{Anonymous list} 
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+	const hello: [5]u8 = .{ 'h', 'e', 'l', 'l', 'o' };
+%	\end{minted}
+	\textbf{Bit manipulation}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const res1 = numOne >> 4;
+		const res2 = numOne << 4;
+		const res3 = numOne & numTwo;
+		const res4 = numOne | numTwo;
+		const res5 = numOne ^ numTwo;
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpCrust}{Datatypes}
+			\textbf{Unsigned Integer} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{u8, u16, u32, u64}\\
+			\textbf{Integer} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{ i8, i16, i32, i64}\\
+			\textbf{Float} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{f16, f32, f64, f80, f128}\\
+			\textbf{String} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[_]u8}\\
+			\textbf{Bool} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{bool}\\
+			\textbf{Pointer} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{*u8}\\
+			\textbf{Pointer to Constant} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{*const u8} \\
+			\textbf{Slice} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[]const u8, []u8}\\
+			\textbf{Many-Pointer}(length is lost) \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[*]const u8, [*]u8}\\
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpBase}{Strings}
+	\textbf{String} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[_]u8}\\
+	\textbf{Multiline String} \begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		var string = 
+		  \\Line 1
+		  \\Line 2
+	\end{minted}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpTeal}{Unions}
+	\textbf{Definitions}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const Data = union {
+		  index: u16,
+		  link: bool,
+		};
+	\end{minted}
+
+	\textbf{Access/Reassignment}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		var node = Data{ .link = true };     //OK
+		const node_n = node.index;           //Crash
+		node = Data{ .index = 1};            //OK
+	\end{minted}
+
+		\textbf{Tagged Union}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+	const Data = union(DataType){
+	  index: u16,
+	  link: bool,
+	};
+	const Data = union(enum){
+	  index: u16,
+	  link: bool,
+	};
+	\end{minted}
+
+		\textbf{Unpack Tagged Union} (Values in switch statement are enum values)
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		switch (node) {
+		  .link => |l| ...,
+		  .index => |i|,
+		  inline else => |x| ...,
+		}
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpGreen}{Optionals}
+	Optional can be value or null
+	\textbf{Defintion}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value: ?u8 = null;
+	\end{minted}
+
+	\textbf{Assignment}(0 if value is null)
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value_b: u8 = value orelse 0;
+	\end{minted}
+	
+	\textbf{Forcing value to be not null}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value_b: u8 = value orelse unreachable;
+	\end{minted}
+
+	\textbf{Extraction}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value_b: u8 = value.?;
+	\end{minted}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpRosewater}{Error}
+	\textbf{Error Definition}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const SpecialError = error{
+			NoNumber,
+			DivisionByZero,
+			InfError,
+		};
+	\end{minted}
+
+	\textbf{Error Union} Variable can be either error or datatype
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var number_or_error: SpecialError!u8 = 5;
+	\end{minted}
+
+	\textbf{Error Catching}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm, breakafter={.}]{zig}
+		return funcWithError(n) catch |err| {
+			if (err == SpecialError.DivisonByZero) {
+				return 0;
+			}
+			return err;
+		};
+	\end{minted}
+
+	\textbf{Standard Error Catching}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		funcWithError(n) catch |err| return err;
+		try funcWithError(n);
+	\end{minted}
+
+	\textbf{Error Extraction}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const n = funcWithError();
+		if (n) |value| {
+		} else |err| switch (err) {}
+	\end{minted}
+
+	\textbf{Error Packaging}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		const SpecialError = SpecialErrorA || SpecialErrorB;
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpLavender}{Enums}
+	\textbf{Definition}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const Fruit = enum { APPLE, BANANA, STRAWBERRY,  };
+		const Fruit = enum(u8) { APPLE = 1, BANANA = 2,  };
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpFlamingo}{Structs}
+	\textbf{Defintion}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const Picture = struct {
+		  width: u32,
+		  height: u32,
+		  data: [_]u32,
+		};
+	\end{minted}
+
+		\textbf{Declaration}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		var pic = Picture {
+		  .width = 10,
+		  .height = 10,
+		  .data = {...},
+		};
+	\end{minted}
+
+		\textbf{Access} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig} {pic.data = {...};} \\
+		\textbf{Method}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const Picture = struct {
+		  width: u32,
+		  height: u32,
+		  pub fn empty() Picture {
+		    ...
+		  }
+		  pub fn mirrorX(self: *Picture ) void {
+		    ...
+		  }
+		};
+		Picture.empty();
+		pic.mirrorX();
+	\end{minted}
+
+		\textbf{Anonymous struct}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn Circle(comptime T: type) type {
+		  return struct {
+		    center_x: T,
+		    center_y: T,
+		    radius: T,
+		  };
+		}
+	\end{minted}
+\end{mycolorbox}
+
+
+
+\begin{mycolorbox}{CtpSapphire}{Flow Control}
+		\textbf{If Statement}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		if (foo) {
+		  std.debug.print("True!\n", .{});
+		} else {
+		std.debug.print("False!\n", .{});
+		}
+	\end{minted}
+
+		\textbf{If Assignment}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value: u8 = if (correct) 1 else 2;
+	\end{minted}
+
+		\textbf{While loop}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		while (condition) {}
+	\end{minted}
+
+		\textbf{While-Loop with continue expression}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		while (condition) : (n*=2) {}
+	\end{minted}
+
+		\textbf{Continue loop}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		while (condition) : (n*=2) {
+		  if (n % 2 == 0) continue;
+		}
+	\end{minted}
+		\textbf{Break loop }
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		while (true) : (n*=2) {
+		  if (n % 2 == 0) break;
+		}
+	\end{minted}
+
+		\textbf{For-Loop}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		for (array) |a| {
+		  std.debug.print("{}", .{a});
+		}
+		for (array, 0..) |a, i| {
+		  std.debug.print("{} at index {}", .{a, i});
+		}
+		for (1..20) |n| {...}
+		for (hex_nums, dec_nums) |hn, dn| {...}
+	\end{minted}
+
+		\textbf{Switch-Statement}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		switch (c) {
+		  1 => std.debug.print("A", .{}),
+		  2 => std.debug.print("B", .{}),
+		  else => std.debug.print("?", .{})
+		}
+	\end{minted}
+
+		\textbf{Switch-Assignment}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const character: u8 = switch (c) {
+		  1 => 'A',
+		  2 => 'B',
+		  else => '!'
+		};
+		foo: switch (@as(u8, 1)) {
+		  1 => continue :foo 2,
+		  2 => continue :foo 3,
+		  3 => return,
+		  4 => {},
+		}
+	\end{minted}
+
+		\textbf{Loop-Assignment}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const index: ?u8 = for (langs, 0..) |lang, i| {
+		  if (lang.len == 2) break i;
+		} else null;
+	\end{minted}
+
+		\textbf{Lables}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const value = outer_loop: for (wave) |v| {
+		  for (v.frequency, 0..) |f, i| {
+		    if (f.frequency == 0) continue :food_loop;
+		  }
+		} else wave[0];
+	\end{minted}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpOverlay0}{Functions}
+		\textbf{Function}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn func(argument: u32) u32 {
+		  return argument;
+		}
+	\end{minted}
+
+		\textbf{Pass By Reference}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn func(argument: *u32) void{
+		  argument = 0;
+		}
+	\end{minted}
+
+		\textbf{Function with possible Error}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn func(argument: u32) SpecialError!u32 {
+		  ... 
+		  return u32SpecialError.InfError;
+		  ...	
+		  return argument;
+		}
+	\end{minted}
+
+		\textbf{Generic function:}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn makeSequence(comptime T: anytype) void {}
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpYellow}{?}
+			\textbf{Defer} (Put an statement to end of block)
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			std.debug.print("(", .{});
+			defer std.debug.print(") ", .{}); 
+			printVector(vec);
+		\end{minted}
+	
+				\textbf{Error defer}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			fn funcWithError() SpecialError!u32 {
+			  // print if function exits with an error:
+			  errdefer std.debug.print("failed!\n", .{});
+			}
+		\end{minted}
+	
+			\textbf{Unreachable} (Make specific blocks unreachable -> defined program crash)
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			switch (op) {
+			  else => unreachable
+			}
+		\end{minted}
+	
+			\textbf{Undefined} (Access of undefinied variables is not allowed)
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			var n: u8 = undefined;
+		\end{minted}
+	
+			\textbf{Quoted Identifier} (Put an statement to end of block)
+		\mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{@"123_nums"}\\
+			\textbf{Tests}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/.}]{zig}
+			test "add" {
+			  try testing.expect(add(41, 1) == 42);
+			  try testing.expectError(error.DivisionByZero,                  divide(15, 0));
+			}
+		\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpRed}{Async}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpMaroon}{BuiltIn}
+	\textbf{Get \lq filename.struct\_name\rq}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@TypeOf()
+	\end{minted}
+	
+	\textbf{Typeinfo:}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/.}]{zig}
+		@typeInfo(Narcissus).@"struct".fields;
+		pub const StructField = struct {
+			name: []const u8,
+			type: type,
+			default_value: anytype,
+			is_comptime: bool,
+			alignment: comptime_int,
+		};
+	\end{minted}
+	
+	\textbf{Compile Time logging}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@compileLog("Count at compile time: ");
+	\end{minted}
+	
+	\textbf{Compile Time Inheritance(?)} (Returns true if type has a method with given name)
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@hasDecl(Type, "function");
+	\end{minted}
+	
+	\textbf{Import c header file}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		const c = @cImport({
+			@cInclude("unistd.h");
+		});
+	\end{minted}
+	
+	\textbf{Vector}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@Vector(len: comptime_int, Element: type)
+	\end{minted}
+	
+	\textbf{Absoulte Value}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@abs(value: anytype)
+	\end{minted}
+	
+	\textbf{Transform vector to scalar}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		@reduce(comptime op: std.builtin.ReduceOp, value: anytype)
+	\end{minted}
+	
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpSapphire}{Comptime}
+		\textbf{Compile time loop}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		inline for (fields) |field|{
+		  if (field.type != void) {
+		    print(" {s}", .{field.name});
+		  }
+		}
+	\end{minted}
+
+		\textbf{Compile time variable}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		comptime var scale: u32 = undefined;
+	\end{minted}
+
+		\textbf{Compile time function}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		fn makeSequence(comptime T: type, comptime size: usize) [size]T {}
+	\end{minted}
+
+		\textbf{Compile time block}	\mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{comptime {...}}\\
+
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpRed}{C Interaction}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpMauve}{Standard Library}
+		\textbf{Import Std}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		\end{minted}
+	
+		\textbf{Index of}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			@import("std").mem.indexOf;
+		\end{minted}
+	
+		\textbf{Std out}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			const stdout = std.io.getStdOut().writer();
+			stdout.print("Hello world!\n", .{});
+		\end{minted}
+	
+			\textbf{Fmt} (Variabletype:filler(Alignment: <>\^)Space)
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			print("{s:*^20}\n", .{"Hello!"});
+		\end{minted}
+		\textbf{Tokenizer}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			var it = std.mem.tokenizeAny(u8, poem, " ,;!\n");
+		\end{minted}
+	
+		\textbf{Threads}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			const handle = try std.Thread.spawn(.{}, thread_function, .{1})
+			defer handle.join();
+		\end{minted}
+	
+		\textbf{Filesystem}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+			const cwd: std.fs.Dir = std.fs.cwd()
+			cwd.makeDir("dir") catch |e| switch (e) {...}
+			var output_dir: std.fs.Dir = cwd.openDir("dir", .{});
+			defer output_dir.close();
+			const file: std.fs.File = try output_dir.createFile("file.txt", .{});
+			defer file.close();
+			const byte_written = try file.write("File Opened");
+		\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpText}{Allocation}
+		\textbf{Arena Allocator}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/.}]{zig}
+		var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+		defer arena.deinit();
+		const allocator = arena.allocator();
+		const avg: []f64 = try allocator.alloc(f64, 5);
+	\end{minted}
+
+		\textbf{General purpose allocater}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/.}]{zig}
+var gpa = heap.GeneralPurposeAllocator(.{}){};
+defer if (gpa.detectLeaks()) log.err("Memory leak detected!", .{});
+const alloc = gpa.allocator();
+	\end{minted}
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpSapphire}{Build System}
+	\textbf{Fetch Dependy}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{sh}
+		zig fetch --save=vaxis https://github.com/rockorager/libvaxis/archive/refs/tags/v0.5.1.tar.gz
+	\end{minted}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpRed}{Commands}
+		\textbf{New Project}
+		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{sh}
+			zig init
+		\end{minted}
+\end{mycolorbox}
+
+\end{multicols*}	
+\newpage
+\begin{mycolorbox}{CtpGreen}{Examples}
+	\textbf{Create map with names of enum}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+		pub const entity_names: std.StaticStringMap(EntityType) = EnumStrMap(EntityType);
+		pub fn EnumStrMap(V: type) std.StaticStringMap(V) {
+			comptime {
+				const field = @typeInfo(V).Enum.fields;
+				const array_type = struct { [:0]const u8, V };
+				var array: [field.len]array_type = undefined;
+				for (field, 0..) |f, i| {
+					array[i] = array_type{ f.name, @as(V, @enumFromInt(f.value)) };
+				}
+				return std.StaticStringMap(V).initComptime(array);
+			}
+		}
+	\end{minted}
+\end{mycolorbox}
+
+\begin{mycolorbox}{CtpSapphire}{Links/Documentation}
+	- \href{https://ziglang.org/documentation/0.14.0/}{Zig Documentation 0.14}\\
+	- \href{https://ziglang.org/documentation/0.14.0/std/}{Zig Standard Library Documentation 0.14}\\
+	- \href{https://zig.guide/}{Zig Guide}\\
+	- \href{https://codeberg.org/ziglings/exercises/#ziglings}{Ziglings examples}\\
+	- \href{https://cookbook.ziglang.cc/}{Zig cookbook}\\
+	- \href{https://ziggit.dev/}{Zig forum}\\
+\end{mycolorbox}
+	
+
+%	\begin{mycolorbox}{CtpSapphire}{Template}
+%		\textbf{Fetch Dependy:}
+%		\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
+%		\end{minted}
+%	\end{mycolorbox}
+	
+		%---------------------------------------------
+%		\AtNextBibliography{\footnotesize}
+		\printbibliography  
+
+	
+\end{document}
