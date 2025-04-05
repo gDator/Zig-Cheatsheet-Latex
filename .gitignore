@@ -7,4 +7,4 @@ cheatsheet.out
 cheatsheet.run.xml
 cheatsheet.synctex.gz
 pdfa.xmpi
-./_minted
+_minted/
