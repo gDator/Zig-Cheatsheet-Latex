@@ -74,7 +74,7 @@
 		const pointer: *u8 = &n;
 	\end{minted}
 
-	\textbf{	Pointer dereferencing}
+	\textbf{Pointer dereferencing}
 	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
 	var n: u8 = pointer.*;
 	\end{minted}
@@ -120,6 +120,33 @@
 			\textbf{Pointer to Constant} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{*const u8} \\
 			\textbf{Slice} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[]const u8, []u8}\\
 			\textbf{Many-Pointer}(length is lost) \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[*]const u8, [*]u8}\\
+			\textbf{Sentinel Array (array ends with specific character)} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[:0]u8}\\
+			\textbf{Sentinel Array Pointer} \mintinline[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}{[*:0]u8}\\
+\end{mycolorbox}
+
+
+\begin{mycolorbox}{CtpPurple}{Type Coercion}
+	\begin{minted}[autogobble, breaklines, xleftmargin=1cm]{zig}
+		var array: [3]u8 = pointer_to_array.*
+		var sentinel_array: [3:0]u8 = pointer_to_sentinel_array.*;
+		var pointer = slice.ptr;
+		var sentinel_pointer: [*:0] = sentinel_slice.ptr;
+		
+		var pointer_to_array *[3]u8 = pointer_to_sentinel_array;
+		var sentinel_slice [:0]u8 = pointer_to_sentinel_array;
+		var slice: []u8 = sentinel_slice;
+		var slice: []u8 = pointer_to_array;
+		var sentinel_pointer: [*:0]u8 = pointer_to_sentinel_array;
+		var pointer: [*]u8 = sentinel_ptr;
+		var array: [3]u8 = sentinel_array;
+		
+		//indirect coercion
+		var slice []u8 = pointer_to_sentinel_array;
+		var pointer: [*]u8 = pointer_to_sentinel_array
+		
+		//other
+		var slice: []u8 = std.mem.spanZ(sentinel_pointer);
+	\end{minted}
 \end{mycolorbox}
 
 \begin{mycolorbox}{CtpBase}{Strings}
@@ -130,6 +157,8 @@
 		  \\Line 2
 	\end{minted}
 \end{mycolorbox}
+
+
 
 \begin{mycolorbox}{CtpTeal}{Unions}
 	\textbf{Definitions}
@@ -251,10 +280,16 @@
 	\textbf{Defintion}
 	\begin{minted}[autogobble, breaklines, xleftmargin=1cm,breakafter={/}]{zig}
 		const Picture = struct {
-		  width: u32,
-		  height: u32,
+		  width: u32  = 10,
+		  height: u32 = 10,
 		  data: [_]u32,
 		};
+	
+		//in-memory layout matching the C ABI 
+		const Picture = extern struct {...}
+		
+		//guaranteed in-memory layout (no padding, order, ...)
+		const Picture = packed struct {...}
 	\end{minted}
 
 		\textbf{Declaration}
@@ -618,6 +653,8 @@ const alloc = gpa.allocator();
 			zig init
 		\end{minted}
 \end{mycolorbox}
+
+
 
 \end{multicols*}	
 \newpage
